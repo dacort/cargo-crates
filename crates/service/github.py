@@ -5,9 +5,9 @@ import logging
 
 import requests
 
-from s3 import get_output_stream
+from crates.common import get_output_stream
 
-GITHUB_PAT = os.getenv("GITHUB_PAT")
+ENV_VARS = ["GITHUB_PAT"]
 API_BASE = "api.github.com"
 
 
@@ -17,8 +17,17 @@ def endpoint(path):
 
 def get(url, params={}):
     return requests.get(
-        url, params=params, headers={"Authorization": f"Bearer {GITHUB_PAT}"}
+        url, params=params, headers={"Authorization": f"Bearer {os.getenv('GITHUB_PAT')}"}
     )
+
+def releases(repo):
+    """
+    Retrieves release data for a specific {owner}/{repo}
+    """
+    url = f"repos/{repo}/releases"
+    response = get(endpoint(url))
+
+    return response.json()
 
 
 def traffic(repo, traffic_path=None):
@@ -47,7 +56,7 @@ def traffic(repo, traffic_path=None):
     return results
 
 
-SUPPORTED_CMDS = ["traffic"]
+SUPPORTED_CMDS = ["traffic", "releases"]
 
 if __name__ == "__main__":
     # logging.basicConfig(level=logging.DEBUG)
@@ -61,7 +70,7 @@ if __name__ == "__main__":
 
     # Then determine where to output our data
     outstream = get_output_stream(
-        os.getenv("OUTPUT_TYPE"), json.loads(os.getenv("OUTPUT_PARAMS"))
+        os.getenv("OUTPUT_TYPE"), os.getenv("OUTPUT_PARAMS")
     )
 
     if cmd == "traffic":
@@ -70,6 +79,10 @@ if __name__ == "__main__":
         if len(options) > 1:
             path = options[1].split(",")
         result = traffic(repo, path)
+    
+    if cmd == "releases":
+        repo = options[0]
+        result = releases(repo)
 
     for r in result:
         outstream.add_record(r)

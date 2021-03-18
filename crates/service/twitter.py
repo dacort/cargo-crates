@@ -5,22 +5,26 @@ import json
 from TwitterAPI import TwitterAPI
 
 
-CONSUMER_KEY = os.getenv("CONSUMER_KEY")
-CONSUMER_SECRET = os.getenv("CONSUMER_SECRET")
-ACCESS_TOKEN_KEY = os.getenv("ACCESS_TOKEN_KEY")
-ACCESS_TOKEN_SECRET = os.getenv("ACCESS_TOKEN_SECRET")
-API = TwitterAPI(CONSUMER_KEY, CONSUMER_SECRET, ACCESS_TOKEN_KEY, ACCESS_TOKEN_SECRET)
-API_V2 = TwitterAPI(
-    CONSUMER_KEY,
-    CONSUMER_SECRET,
-    ACCESS_TOKEN_KEY,
-    ACCESS_TOKEN_SECRET,
-    api_version="2",
-)
+ENV_VARS = [
+    "CONSUMER_KEY",
+    "CONSUMER_SECRET",
+    "ACCESS_TOKEN_KEY",
+    "ACCESS_TOKEN_SECRET",
+]
+
+
+def client_v2():
+    return TwitterAPI(
+        os.getenv("CONSUMER_KEY"),
+        os.getenv("CONSUMER_SECRET"),
+        os.getenv("ACCESS_TOKEN_KEY"),
+        os.getenv("ACCESS_TOKEN_SECRET"),
+        api_version="2",
+    )
 
 
 def user_info_by_username(username):
-    r = API_V2.request(f"users/by/username/:{username}")
+    r = client_v2.request(f"users/by/username/:{username}")
     return r.json().get("data")
 
 
@@ -32,7 +36,7 @@ def followers_by_userid(userid):
         "max_results": "1000",
     }
     while True:
-        response = API_V2.request(f"users/:{userid}/followers", params)
+        response = client_v2.request(f"users/:{userid}/followers", params)
         data = response.json()
         followers.extend(data.get("data", []))
         if "meta" in data and "next_token" in data.get("meta", {}):

@@ -3,7 +3,7 @@ import json
 
 import requests
 
-OURA_PAT = os.getenv("OURA_PAT")
+ENV_VARS = ["OURA_PAT"]
 API_BASE = "api.ouraring.com/v1"
 
 
@@ -13,7 +13,7 @@ def endpoint(path):
 
 def get(url, params={}):
     return requests.get(
-        url, params=params, headers={"Authorization": f"Bearer {OURA_PAT}"}
+        url, params=params, headers={"Authorization": f"Bearer {os.getenv('OURA_PAT')}"}
     )
 
 

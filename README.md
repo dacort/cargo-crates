@@ -73,3 +73,4 @@ Perhaps someday down the road there could be a set of base images that provide a
 - [Python project structure](https://dev.to/codemouse92/dead-simple-python-project-structure-and-imports-38c6)
 - [Minimal Docker containers for Python](https://blog.realkinetic.com/building-minimal-docker-containers-for-python-applications-37d0272c52f3)
 - (ended up not using, but) [IO Streams with Python](https://medium.com/dev-bits/ultimate-guide-for-working-with-i-o-streams-and-zip-archives-in-python-3-6f3cf96dca50)
+- [For building matrix builds](https://stackoverflow.com/questions/59977364/github-actions-how-use-strategy-matrix-with-script)

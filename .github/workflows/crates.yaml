@@ -66,8 +66,8 @@ jobs:
           context: .
           file: ./Dockerfile.${{ matrix.services }}
           tags: |
-            ghcr.io/${{ github.repository_owner }}/${{ github.workflow }}:${{ steps.date.outputs.date }}
-            ghcr.io/${{ github.repository_owner }}/${{ github.workflow }}:latest
+            ghcr.io/${{ github.repository_owner }}/${{ github.workflow }}-${{ matrix.services }}:${{ steps.date.outputs.date }}
+            ghcr.io/${{ github.repository_owner }}/${{ github.workflow }}-${{ matrix.services }}:latest
       -
         name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}

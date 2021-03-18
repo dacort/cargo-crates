@@ -1,8 +1,10 @@
 name: build
 on: push
 jobs:
-  job0:
+  job1:
     runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
     steps:
       - name: checkout repo content
         uses: actions/checkout@v2 # checkout the repository content to github runner.
@@ -10,12 +12,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: 3.8 #install the python needed
-  job1:
-    needs: job0
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
       - id: set-matrix
         run: echo "::set-output name=matrix::{\"include\":$( python -c 'import crates.service as s; import json; print(json.dumps(json.dumps(s.ALL)))' )}"
   job2:

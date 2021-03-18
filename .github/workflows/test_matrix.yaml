@@ -14,7 +14,7 @@ jobs:
           python-version: 3.8 #install the python needed
       - id: set-matrix
         run: |
-          SERVICES=$( python -c 'import crates.service as s; import json; print(json.dumps(json.dumps(s.ALL)))' )
+          SERVICES=$( python -c 'import crates.service as s; import json; print(json.dumps(s.ALL))' )
           echo "{\"services\":${SERVICES}}"
           echo "::set-output name=matrix::$( echo "{\"services\":${SERVICES}}" )"
   job2:

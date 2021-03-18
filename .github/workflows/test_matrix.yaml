@@ -13,12 +13,11 @@ jobs:
         with:
           python-version: 3.8 #install the python needed
       - id: set-matrix
-        run: echo "::set-output name=matrix::{\"include\":$( python -c 'import crates.service as s; import json; print(json.dumps(json.dumps(s.ALL)))' )}"
+        run: echo "::set-output name=matrix::$( python -c 'import crates.service as s; import json; print(json.dumps(json.dumps(s.ALL)))' )"
   job2:
     needs: job1
     runs-on: ubuntu-latest
     strategy:
-      matrix: 
-        service: ${{fromJson(needs.job1.outputs.matrix)}}
+      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
       - run: echo ${{ matrix }}

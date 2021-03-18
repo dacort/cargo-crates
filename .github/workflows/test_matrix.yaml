@@ -13,7 +13,10 @@ jobs:
         with:
           python-version: 3.8 #install the python needed
       - id: set-matrix
-        run: echo "::set-output name=matrix::$( python -c 'import crates.service as s; import json; print(json.dumps(json.dumps(s.ALL)))' )"
+        run: |
+          SERVICES=$( python -c 'import crates.service as s; import json; print(json.dumps(json.dumps(s.ALL)))' )
+          echo "$SERVICES"
+          echo "::set-output name=matrix::$( echo "$SERVICES" )"
   job2:
     needs: job1
     runs-on: ubuntu-latest

@@ -11,6 +11,7 @@ jobs:
         with:
           python-version: 3.8 #install the python needed
   job1:
+    needs: job0
     runs-on: ubuntu-latest
     outputs:
       matrix: ${{ steps.set-matrix.outputs.matrix }}

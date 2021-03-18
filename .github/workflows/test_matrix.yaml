@@ -15,7 +15,7 @@ jobs:
       - id: set-matrix
         run: |
           SERVICES=$( python -c 'import crates.service as s; import json; print(json.dumps(json.dumps(s.ALL)))' )
-          eecho "{\"services\":${SERVICES}}"
+          echo "{\"services\":${SERVICES}}"
           echo "::set-output name=matrix::$( echo "{\"services\":${SERVICES}}" )"
   job2:
     needs: job1

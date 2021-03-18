@@ -1,11 +1,7 @@
 import os
 import sys
-import json
-import logging
 
 import requests
-
-from crates.common import get_output_stream
 
 ENV_VARS = ["GITHUB_PAT"]
 API_BASE = "api.github.com"
@@ -68,11 +64,6 @@ if __name__ == "__main__":
         print(f"ERR: '{cmd}' is not a supported commmand.")
         exit(1)
 
-    # Then determine where to output our data
-    outstream = get_output_stream(
-        os.getenv("OUTPUT_TYPE"), os.getenv("OUTPUT_PARAMS")
-    )
-
     if cmd == "traffic":
         repo = options[0]
         path = None
@@ -85,5 +76,4 @@ if __name__ == "__main__":
         result = releases(repo)
 
     for r in result:
-        outstream.add_record(r)
-    outstream.close()
+        print(r)

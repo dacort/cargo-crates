@@ -18,7 +18,7 @@ jobs:
       - id: set-matrix
         run: |
           JSON="{\"include\":
-          echo "::set-output name=matrix::{\"include\":$( python -c "import crates.service as s; import json; print(json.dumps(json.dumps(s.ALL)))" )}"
+          echo "::set-output name=matrix::{\"include\":$( python -c 'import crates.service as s; import json; print(json.dumps(json.dumps(s.ALL)))' )}"
   job2:
     needs: job1
     runs-on: ubuntu-latest

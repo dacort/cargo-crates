@@ -24,7 +24,7 @@ def client_v2():
 
 
 def user_info_by_username(username):
-    r = client_v2.request(f"users/by/username/:{username}")
+    r = client_v2().request(f"users/by/username/:{username}")
     return r.json().get("data")
 
 
@@ -36,7 +36,7 @@ def followers_by_userid(userid):
         "max_results": "1000",
     }
     while True:
-        response = client_v2.request(f"users/:{userid}/followers", params)
+        response = client_v2().request(f"users/:{userid}/followers", params)
         data = response.json()
         followers.extend(data.get("data", []))
         if "meta" in data and "next_token" in data.get("meta", {}):

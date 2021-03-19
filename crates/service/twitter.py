@@ -64,6 +64,6 @@ if __name__ == "__main__":
     if cmd == "followers":
         username = options[0]
         user_info = user_info_by_username(username)
-        followers = followers_by_userid(user_info.get("data").get("id"))
+        followers = followers_by_userid(user_info.get("id"))
         for follower in followers:
             print(json.dumps(follower))

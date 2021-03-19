@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 
 import requests
 
@@ -76,4 +77,4 @@ if __name__ == "__main__":
         result = releases(repo)
 
     for r in result:
-        print(r)
+        print(json.dumps(r))

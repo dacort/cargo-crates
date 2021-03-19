@@ -1,5 +1,7 @@
 name: crates
-on: push
+on: 
+  push:
+    branches: main
 jobs:
   matrix-generator:
     runs-on: ubuntu-latest

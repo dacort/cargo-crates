@@ -13,7 +13,7 @@ Convention over configuration(?).
 Cargo crates share a common set of patterns that make them easy to use.
 
 - Each crate is associated with a specific API.
-- Authentication is provide via environment variables.
+- Authentication is provided via environment variables.
 - Parameters are provided to the container at runtime.
 
 For example, to extract sleep data from the Oura API you would run a container like this:
@@ -49,6 +49,10 @@ docker run --env-file .env ghcr.io/dacort/crates-twitter followers dacort
 The idea is that the Docker container provides an abstraction on top of the underlying APIs and can be implemented however you want. 
 
 Perhaps someday down the road there could be a set of base images that provide a nice set of abstractions for generic authentication and error handling. But for now, it's just a bunch of python.
+
+## Caveats
+
+Right now I'm building this for my own purposes. So the set of supported APIs or endpoints is rather limited.
 
 ## Supported Services
 

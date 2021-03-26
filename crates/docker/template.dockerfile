@@ -28,4 +28,5 @@ RUN useradd appuser && chown -R appuser /app
 USER appuser
 
 # During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+COPY --from=ghcr.io/dacort/forklift:latest /forklift /usr/local/bin/forklift
 ENTRYPOINT $entry

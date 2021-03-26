@@ -27,7 +27,7 @@ def releases(repo):
     return response.json()
 
 
-def traffic(repo, traffic_path=None):
+def traffic(repos, traffic_path=None):
     """
     Retrieves different traffic data from the specificed {owner}/{repo}
     Supports the following traffic paths:
@@ -44,11 +44,12 @@ def traffic(repo, traffic_path=None):
         traffic_path = [traffic_path]
 
     results = []
-    for path in traffic_path:
-        url = f"repos/{repo}/traffic/{path}"
-        response = get(endpoint(url))
-        # results[path] = response.json()
-        results.append({"repo": repo, "path": path, "stats": response.json()})
+    for repo in repos:
+        for path in traffic_path:
+            url = f"repos/{repo}/traffic/{path}"
+            response = get(endpoint(url))
+            # results[path] = response.json()
+            results.append({"repo": repo, "path": path, "stats": response.json()})
 
     return results
 
@@ -66,7 +67,7 @@ if __name__ == "__main__":
         exit(1)
 
     if cmd == "traffic":
-        repo = options[0]
+        repo = options[0].split(",")
         path = None
         if len(options) > 1:
             path = options[1].split(",")

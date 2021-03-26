@@ -17,7 +17,7 @@ if __name__ == "__main__":
         i = importlib.import_module(mod_name)
         config = {
             'env': '\n'.join([f"ENV {var}=" for var in i.ENV_VARS]),
-            'entry': json.dumps(["python", "-m", f"{mod_name}"])
+            'entry': json.dumps(["forklift", "python", "-m", f"{mod_name}"])
         }
 
         with open(template_file(), 'r') as f:

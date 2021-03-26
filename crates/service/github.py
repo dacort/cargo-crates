@@ -1,6 +1,7 @@
 import os
 import sys
 import json
+from datetime import datetime
 
 import requests
 
@@ -49,7 +50,13 @@ def traffic(repos, traffic_path=None):
             url = f"repos/{repo}/traffic/{path}"
             response = get(endpoint(url))
             # results[path] = response.json()
-            results.append({"repo": repo, "path": path, "stats": response.json()})
+            results.append({
+                "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+                "utcisonow": datetime.utcnow().isoformat(),
+                "repo": repo,
+                "path": path,
+                "stats": response.json()
+            })
 
     return results
 

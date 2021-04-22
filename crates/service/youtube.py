@@ -36,6 +36,7 @@ def _get_playlist_video_ids(playlist_id):
     params = {
         "part": "snippet",
         "playlistId": playlist_id,
+        "maxResults": 50
     }
     # TODO: Pagination
     r = get(endpoint("playlistItems"), params)
@@ -65,6 +66,8 @@ def videos(video_ids):
     Retrieves basic info about the provided videos as well as statistics.
     Intended to retrieve data about _public_ videos.
     Google Docs: https://developers.google.com/youtube/v3/docs/videos/list
+
+    Up to 50 video ids can be provided at once
     """
     params = {
         "part": "snippet,contentDetails,statistics",

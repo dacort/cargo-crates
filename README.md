@@ -62,10 +62,15 @@ Supported Commands:
 - `traffic` - returns results from GitHub traffic stats including clones, popular/paths, popular/referrers, and views. Each type of traffic stat is a subcommand.
 - `releases` - returns information about releases for a specific GitHub repo.
 
+Environment Variables:
+- `GITHUB_PAT` - Your GitHub [Personal Access Token](https://github.com/settings/tokens)
+
 Examples:
 - Return all traffic stats for `dacort/cargo-crates`
     ```shell
-    docker run -e GITHUB_PAT ghcr.io/dacort/crates-github traffic dacort/cargo-crates 
+    docker run -e GITHUB_PAT \
+        ghcr.io/dacort/crates-github \
+        traffic dacort/cargo-crates 
     ```
     ```json
     {"repo": "dacort/cargo-crates", "path": "clones", "stats": {"count": 77, "uniques": 8, "clones": [{"timestamp": "2021-03-18T00:00:00Z", "count": 77, "uniques": 8}]}}
@@ -79,6 +84,377 @@ Examples:
     ```
     ```json
     {"repo": "dacort/cargo-crates", "path": "views", "stats": {"count": 108, "uniques": 2, "views": [{"timestamp": "2021-03-18T00:00:00Z", "count": 108, "uniques": 2}]}}
+    ```
+
+### YouTube
+
+Supported Commands:
+- `videos` - return video stats for up to 50 video IDs.
+- `channel_videos` - return video stats for 50 videos on the provided channel ID.
+
+Environment Variables:
+- `YOUTUBE_API_KEY` - An API key for the [YouTube Data API](https://developers.google.com/youtube/v3/docs)
+
+Examples:
+- Return video stats for [Intro to EMR Studio](https://www.youtube.com/watch?v=rZ3zeJ6WKPY)
+    ```shell
+    docker run -e YOUTUBE_API_KEY \
+        ghcr.io/dacort/crates-youtube \
+        videos rZ3zeJ6WKPY 
+    ```
+    <details>
+        <summary>Click to view JSON</summary>
+    ```json
+    {
+        "kind": "youtube#video",
+        "etag": "tbhtHqbvEMe3jNGfFGK36HpowJk",
+        "id": "rZ3zeJ6WKPY",
+        "snippet": {
+            "publishedAt": "2021-04-21T22:43:26Z",
+            "channelId": "UCd6MoB9NC6uYN2grvUNT-Zg",
+            "title": "Intro to Amazon EMR Studio",
+            "description": "Introduction to Amazon EMR Studio. In this video, we show how to:\n- Create a new workspace\n- Utilize cluster templates for EMR clusters\n- Connect EMR Studio to a GitHub repository\n- Execute parameterized notebooks\n\nLearn more about Amazon EMR Studio - https://amzn.to/3xhbuEj\n\nSubscribe: \nMore AWS videos - http://bit.ly/2O3zS75 \nMore AWS events videos - http://bit.ly/316g9t4\n\n#AWS #AWSDemo #AmazonEMRStudio",
+            "thumbnails": {
+                "default": {
+                    "url": "https://i.ytimg.com/vi/rZ3zeJ6WKPY/default.jpg",
+                    "width": 120,
+                    "height": 90
+                },
+                "medium": {
+                    "url": "https://i.ytimg.com/vi/rZ3zeJ6WKPY/mqdefault.jpg",
+                    "width": 320,
+                    "height": 180
+                },
+                "high": {
+                    "url": "https://i.ytimg.com/vi/rZ3zeJ6WKPY/hqdefault.jpg",
+                    "width": 480,
+                    "height": 360
+                },
+                "standard": {
+                    "url": "https://i.ytimg.com/vi/rZ3zeJ6WKPY/sddefault.jpg",
+                    "width": 640,
+                    "height": 480
+                },
+                "maxres": {
+                    "url": "https://i.ytimg.com/vi/rZ3zeJ6WKPY/maxresdefault.jpg",
+                    "width": 1280,
+                    "height": 720
+                }
+            },
+            "channelTitle": "Amazon Web Services",
+            "tags": [
+                "AWS",
+                "Amazon Web Services",
+                "Cloud",
+                "AWS Cloud",
+                "Cloud Computing",
+                "Amazon AWS",
+                "Amazon EMR",
+                "Amazon EMR Studio",
+                "Jupyter"
+            ],
+            "categoryId": "28",
+            "liveBroadcastContent": "none",
+            "localized": {
+                "title": "Intro to Amazon EMR Studio",
+                "description": "Introduction to Amazon EMR Studio. In this video, we show how to:\n- Create a new workspace\n- Utilize cluster templates for EMR clusters\n- Connect EMR Studio to a GitHub repository\n- Execute parameterized notebooks\n\nLearn more about Amazon EMR Studio - https://amzn.to/3xhbuEj\n\nSubscribe: \nMore AWS videos - http://bit.ly/2O3zS75 \nMore AWS events videos - http://bit.ly/316g9t4\n\n#AWS #AWSDemo #AmazonEMRStudio"
+            },
+            "defaultAudioLanguage": "en"
+        },
+        "contentDetails": {
+            "duration": "PT12M34S",
+            "dimension": "2d",
+            "definition": "hd",
+            "caption": "false",
+            "licensedContent": false,
+            "contentRating": {},
+            "projection": "rectangular"
+        },
+        "statistics": {
+            "viewCount": "537",
+            "likeCount": "9",
+            "dislikeCount": "0",
+            "favoriteCount": "0",
+            "commentCount": "0"
+        }
+    }
+    ```
+    </details>
+
+### Oura
+
+Retrieve one of three different [daily summaries](https://cloud.ouraring.com/docs/daily-summaries) from the Oura Ring API.
+
+Supported Commands:
+- `sleep` - return [sleep periods](https://cloud.ouraring.com/docs/sleep)
+- `activity` - return [activity summary](https://cloud.ouraring.com/docs/activity)
+- `readiness` - return [readiness data](https://cloud.ouraring.com/docs/readiness)
+
+Environment Variables:
+- `OURA_PAT` - Your Oura [personal access token](https://cloud.ouraring.com/personal-access-tokens#)
+
+Examples:
+- Return sleep data for the past 7 days
+    ```shell
+    docker run -e OURA_PAT \
+        ghcr.io/dacort/crates-oura \
+        sleep | head -n 1
+    ```
+    <details>
+        <summary>Click to view JSON</summary>
+    ```json
+    {
+        "awake": 2010,
+        "bedtime_end": "2021-04-20T06:55:43-07:00",
+        "bedtime_end_delta": 24943,
+        "bedtime_start": "2021-04-19T23:24:43-07:00",
+        "bedtime_start_delta": -2117,
+        "breath_average": 16.25,
+        "deep": 4290,
+        "duration": 27060,
+        "efficiency": 93,
+        "hr_5min": [
+            63,
+            63,
+            64,
+            65,
+            66,
+            66,
+            66,
+            67,
+            66,
+            66,
+            67,
+            70,
+            71,
+            70,
+            69,
+            69,
+            70,
+            69,
+            68,
+            68,
+            68,
+            67,
+            67,
+            66,
+            66,
+            66,
+            66,
+            66,
+            62,
+            64,
+            70,
+            68,
+            67,
+            66,
+            66,
+            67,
+            66,
+            66,
+            65,
+            66,
+            66,
+            67,
+            67,
+            67,
+            67,
+            70,
+            69,
+            71,
+            71,
+            69,
+            68,
+            66,
+            63,
+            65,
+            67,
+            66,
+            65,
+            64,
+            63,
+            62,
+            63,
+            65,
+            66,
+            65,
+            69,
+            72,
+            74,
+            72,
+            68,
+            68,
+            69,
+            68,
+            66,
+            62,
+            63,
+            62,
+            61,
+            60,
+            60,
+            58,
+            60,
+            57,
+            58,
+            57,
+            57,
+            58,
+            61,
+            64,
+            66,
+            61,
+            0
+        ],
+        "hr_average": 65.68,
+        "hr_lowest": 57,
+        "hypnogram_5min": "4221111111222322221111222122223332222222223344333332222212222112333334233332222242222222444",
+        "is_longest": 1,
+        "light": 14730,
+        "midpoint_at_delta": 11083,
+        "midpoint_time": 13200,
+        "onset_latency": 270,
+        "period_id": 0,
+        "rem": 6030,
+        "restless": 29,
+        "rmssd": 27,
+        "rmssd_5min": [
+            33,
+            27,
+            20,
+            19,
+            17,
+            17,
+            17,
+            17,
+            19,
+            22,
+            31,
+            28,
+            18,
+            19,
+            20,
+            19,
+            14,
+            15,
+            17,
+            14,
+            14,
+            15,
+            15,
+            18,
+            17,
+            17,
+            16,
+            40,
+            44,
+            32,
+            21,
+            26,
+            30,
+            27,
+            20,
+            20,
+            17,
+            27,
+            19,
+            16,
+            18,
+            22,
+            23,
+            24,
+            33,
+            23,
+            27,
+            19,
+            19,
+            19,
+            36,
+            29,
+            38,
+            29,
+            27,
+            27,
+            36,
+            31,
+            29,
+            34,
+            29,
+            28,
+            24,
+            36,
+            26,
+            23,
+            19,
+            17,
+            31,
+            30,
+            29,
+            30,
+            32,
+            47,
+            39,
+            30,
+            44,
+            53,
+            48,
+            41,
+            42,
+            65,
+            47,
+            62,
+            48,
+            39,
+            36,
+            22,
+            26,
+            36,
+            0
+        ],
+        "score": 83,
+        "score_alignment": 97,
+        "score_deep": 88,
+        "score_disturbances": 77,
+        "score_efficiency": 98,
+        "score_latency": 72,
+        "score_rem": 91,
+        "score_total": 77,
+        "summary_date": "2021-04-19",
+        "temperature_delta": 0.06,
+        "temperature_deviation": 0.06,
+        "temperature_trend_deviation": 0.29,
+        "timezone": -420,
+        "total": 25050,
+        "activity_type": "sleep"
+    }
+    ```
+    </details>
+
+### Twitter
+
+Only a couple Twitter endpoints are defined at this point.
+
+Supported Commands:
+- `followers` - return list of followers for a given screen name
+- `users/show` - return user profile data for a given screen name
+
+Environment Variables - create a Twitter app and define the 4 different variables.
+- `CONSUMER_KEY`
+- `CONSUMER_SECRET`
+- `ACCESS_TOKEN_KEY`
+- `ACCESS_TOKEN_SECRET`
+
+You can store all these environment variables in a file and reference that file with Docker.
+
+Examples:
+- Return [@dacort's](https://twitter.com/dacort) profile
+    ```shell
+    docker run --env-file .env \
+        ghcr.io/dacort/crates-twitter \
+        users/show dacort
+    ```
+    ```json
+    {"id": "99723", "name": "Damon Cortesi", "username": "dacort"}
     ```
 
 ## Some higher level thoughts after a few implementations

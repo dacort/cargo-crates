@@ -457,6 +457,26 @@ Examples:
     {"id": "99723", "name": "Damon Cortesi", "username": "dacort"}
     ```
 
+## Writing output to Amazon S3
+
+The original idea behind this repo was that I could run these containers and easily output the resulting data to templated paths on S3. 
+
+So I built another tool, called [Forklift](https://github.com/dacort/forklift), that comes bundled with each Cargo Crate.
+
+If you run the container normally, the output gets printed to stdout. However, if you provide a `FORKLIFT_URI` environment variable,
+the data will get written to the S3 path provided. You can templatize parts of the path with JSON keys or a couple helper functions.
+
+For example, the command below will upload my profile info to `s3://<BUCKET>/forklift/twitter/dt=2021-05-15/dacort.json`
+
+```shell
+docker run \
+    -e FORKLIFT_URI='s3://<BUCKET>/forklift/twitter/dt={{ today }}/{{json "username"}}.json' \
+    -e AWS_ACCESS_KEY_ID \
+    -e AWS_SECRET_ACCESS_KEY \
+    --env-file .env \
+    ghcr.io/dacort/crates-twitter users/show dacort
+```
+
 ## Some higher level thoughts after a few implementations
 
 - The data is intended to be streamed

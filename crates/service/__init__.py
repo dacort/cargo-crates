@@ -1,1 +1,1 @@
-ALL = ["fatherhood", "github", "oura", "twitter", "youtube"]
+ALL = ["fatherhood", "github", "oura", "slack", "twitter", "youtube"]

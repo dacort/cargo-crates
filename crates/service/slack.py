@@ -53,9 +53,9 @@ def channels():
         data = r.json()
         channel_list.extend(data.get("channels", []))
         # Next cursor is by default an empty string, but in case it's not use that as the default.
-        cursor = data.get('response_metadata', {}).get('next_cursor', '')
-        if cursor > '':
-            params['cursor'] = cursor
+        cursor = data.get("response_metadata", {}).get("next_cursor", "")
+        if cursor > "":
+            params["cursor"] = cursor
         else:
             break
 

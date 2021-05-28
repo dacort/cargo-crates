@@ -430,6 +430,33 @@ Examples:
     ```
     </details>
 
+### Slack Web API
+
+The [Slack Web API](https://api.slack.com/web) is intended for use with ad-hoc queries and I use it to query basic info about some of the channels I'm in.
+
+Supported Commands:
+- `channels` - [list all channels](https://api.slack.com/methods/conversations.list) in a Slack team
+- `search` - [search for a keyword](https://api.slack.com/methods/search.messages) in your Slack team
+
+Environment Variables:
+- `SLACK_TOKEN` - Some sort of Slack token that starts with `xox...`
+
+Examples:
+
+1. Get a list of channels for the workspace the token is associated with
+
+```shell
+docker run -e SLACK_TOKEN \
+    ghcr.io/dacort/crates-slack channels
+```
+
+2. Perform a search in the workspace the token is associated with
+
+```shell
+docker run -e SLACK_TOKEN \
+    ghcr.io/dacort/crates-slack search dacort
+```
+
 ### Twitter
 
 Only a couple Twitter endpoints are defined at this point.

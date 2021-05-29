@@ -430,6 +430,21 @@ Examples:
     ```
     </details>
 
+### Reddit API
+
+I wanted to get my saved posts out of the [Reddit API](https://www.reddit.com/dev/api). It's a little tough to understand, and the saved posts aren't actually documented there...but after [some hunting](https://www.reddit.com/r/redditdev/comments/91g3ek/api_403_while_trying_to_get_my_saved_posts/), I found that they can be accessed at `/user/dacort/saved.json`.
+
+This functionality just fetches the most recent 100 saved posts every time. I considered adding a `start_date` filter, but don't need it right now. 😁
+
+Supported Commands:
+- saved <username> - [list saved posts] for `<username>`
+
+Environment Variables:
+- CLIENT_ID - Client ID of a ["script"](https://www.reddit.com/prefs/apps) type app
+- CLIENT_SECRET - App secret
+- USERNAME - Your Reddit username
+- PASSWORD - Your Reddit password
+
 ### Slack Web API
 
 The [Slack Web API](https://api.slack.com/web) is intended for use with ad-hoc queries and I use it to query basic info about some of the channels I'm in.

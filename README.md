@@ -437,7 +437,9 @@ I wanted to get my saved posts out of the [Reddit API](https://www.reddit.com/de
 This functionality just fetches the most recent 100 saved posts every time. I considered adding a `start_date` filter, but don't need it right now. 😁
 
 Supported Commands:
-- saved <username> - [list saved posts] for `<username>`
+- saved <username> - list saved posts for `<username>`
+- search [subreddit] <search_term> - search all of Reddit or a specific subreddit (`r/subreddit_name`) for a search term
+    - Note that terms in quotes need to be surrounded in single quotes, e.g. `'"cargo crates"'`
 
 Environment Variables:
 - CLIENT_ID - Client ID of a ["script"](https://www.reddit.com/prefs/apps) type app

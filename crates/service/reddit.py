@@ -50,7 +50,20 @@ def saved(username: str, start_date: str = None):
     return r.json().get("data", {}).get("children", [])
 
 
-SUPPORTED_CMDS = ["saved"]
+def search(keyword: str, subreddit_path: str = None):
+    access_token = get_access_token()
+    params = {"type": "link", "sort": "new", "limit": 100, "q": keyword}
+    url = f"https://{API_BASE}/search.json"
+    if subreddit_path is not None:
+        params["restrict_sr"] = "true"
+        url = f"https://{API_BASE}/{subreddit_path}/search.json"
+
+    r = get(url, access_token, params)
+    print(url, params)
+    return r.json().get("data", {}).get("children", [])
+
+
+SUPPORTED_CMDS = ["saved", "search"]
 
 
 if __name__ == "__main__":
@@ -65,10 +78,26 @@ if __name__ == "__main__":
         print(f"ERR: '{cmd}' is not a supported commmand.")
         exit(1)
 
-    start_date = None
-    if os.getenv("start"):
-        start_date = os.getenv("start")
-    result = saved(username)
+    if cmd == "saved":
+        start_date = None
+        if os.getenv("start"):
+            start_date = os.getenv("start")
+        result = saved(username)
+
+    if cmd == "search":
+        # We (optionally) take the subreddit as the first argument because the search term can be arbitrarily long
+        search_term = " ".join(sys.argv[2:])
+        subreddit = None
+        if sys.argv[2].startswith("r/"):
+            subreddit = sys.argv[2]
+            search_term = " ".join(sys.argv[3:])
+        result = search(search_term, subreddit)
 
     for r in result:
-        print(json.dumps(r))
+        try:
+            print(json.dumps(r))
+        except BrokenPipeError:
+            # We both catch the error *and* close stderr (stdout is already closed)
+            # Reference: https://stackoverflow.com/a/26738736
+            sys.stderr.close()
+            exit(0)

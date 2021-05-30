@@ -46,20 +46,17 @@ def channels():
     """
     params = {"exclude_archived": "true"}
 
-    channel_list = []
-
     while True:
         r = get(endpoint("conversations.list"), params)
         data = r.json()
-        channel_list.extend(data.get("channels", []))
+        for chan in data.get("channels", []):
+            yield chan
         # Next cursor is by default an empty string, but in case it's not use that as the default.
         cursor = data.get("response_metadata", {}).get("next_cursor", "")
         if cursor > "":
             params["cursor"] = cursor
         else:
             break
-
-    return channel_list
 
 
 SUPPORTED_CMDS = ["search", "channels"]
@@ -83,4 +80,10 @@ if __name__ == "__main__":
 
     for r in result:
         r["team_name"] = team_name
-        print(json.dumps(r))
+        try:
+            print(json.dumps(r))
+        except BrokenPipeError:
+            # We both catch the error *and* close stderr (stdout is already closed)
+            # Reference: https://stackoverflow.com/a/26738736
+            sys.stderr.close()
+            exit(0)

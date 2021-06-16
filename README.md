@@ -520,6 +520,8 @@ docker run \
     --env-file .env \
     ghcr.io/dacort/crates-twitter users/show dacort
 ```
+ 
+Note that we passed AWS credentials as environment variables. You will either need to do that or run the container in AWS using [instance profiles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html). 
 
 ## Some higher level thoughts after a few implementations
 

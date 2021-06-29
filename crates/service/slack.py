@@ -20,12 +20,12 @@ def get(url, params={}):
     )
 
 
-def team_name():
+def team_info():
     """
-    Returns the team name of the authenticated user.
+    Returns the result of the team.info lookup.
     """
     r = get(endpoint("team.info"))
-    return r.json().get("team").get("name")
+    return r.json().get("team")
 
 
 def search(query):
@@ -69,7 +69,10 @@ if __name__ == "__main__":
         print(f"ERR: '{cmd}' is not a supported commmand.")
         exit(1)
 
-    team_name = team_name()
+    team_info = team_info()
+    team_name = team_info.get("name")
+    team_id = team_info.get("id")
+    team_domain = team_info.get("domain")
 
     if cmd == "search":
         query = sys.argv[2:]
@@ -80,6 +83,8 @@ if __name__ == "__main__":
 
     for r in result:
         r["team_name"] = team_name
+        r["team_id"] = team_id
+        r["team_domain"] = team_domain
         try:
             print(json.dumps(r))
         except BrokenPipeError:

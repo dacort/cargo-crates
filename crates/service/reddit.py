@@ -38,6 +38,14 @@ def get_access_token() -> str:
     return response.json().get("access_token")
 
 
+def show_bearer_token():
+    """
+    Simply generates and returns a bearer token with the provided credentials.
+    """
+    access_token = get_access_token()
+    return f"{access_token}"
+
+
 def saved(username: str, start_date: str = None):
     """
     Returns the most recent saved posts of the provided user.
@@ -63,7 +71,7 @@ def search(keyword: str, subreddit_path: str = None):
     return r.json().get("data", {}).get("children", [])
 
 
-SUPPORTED_CMDS = ["saved", "search"]
+SUPPORTED_CMDS = ["saved", "search", "show_bearer_token"]
 
 
 if __name__ == "__main__":
@@ -72,13 +80,13 @@ if __name__ == "__main__":
         exit(1)
 
     cmd = sys.argv[1]
-    username = sys.argv[2]
 
     if cmd not in SUPPORTED_CMDS:
         print(f"ERR: '{cmd}' is not a supported commmand.")
         exit(1)
 
     if cmd == "saved":
+        username = sys.argv[2]
         start_date = None
         if os.getenv("start"):
             start_date = os.getenv("start")
@@ -92,6 +100,9 @@ if __name__ == "__main__":
             subreddit = sys.argv[2]
             search_term = " ".join(sys.argv[3:])
         result = search(search_term, subreddit)
+
+    if cmd == "show_bearer_token":
+        result = [show_bearer_token()]
 
     for r in result:
         try:

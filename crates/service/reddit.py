@@ -67,7 +67,6 @@ def search(keyword: str, subreddit_path: str = None):
         url = f"https://{API_BASE}/{subreddit_path}/search.json"
 
     r = get(url, access_token, params)
-    print(url, params)
     return r.json().get("data", {}).get("children", [])
 
 

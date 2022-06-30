@@ -13,10 +13,26 @@ def endpoint(path):
     return f"https://{API_BASE}/{path}"
 
 
-def get(url, params={}):
+def get(url, params={}, headers={}):
+    headers.update({"Authorization": f"Bearer {os.getenv('GITHUB_PAT')}"})
     return requests.get(
-        url, params=params, headers={"Authorization": f"Bearer {os.getenv('GITHUB_PAT')}"}
+        url, params=params, headers=headers
     )
+
+def search(type, query):
+    """
+    Searches GitHub for the specific query.
+    Defaults to descending sort by date with no way to change it.
+    """
+    url = f"search/{type}"
+    params = {
+        "q": query,
+        "sort": "created",
+        "order": "desc"
+    }
+    response = get(endpoint(url), params, {"Accept": "application/vnd.github.v3.text-match+json"})
+
+    return response.json().get('items')
 
 def releases(repo):
     """
@@ -61,7 +77,7 @@ def traffic(repos, traffic_path=None):
     return results
 
 
-SUPPORTED_CMDS = ["traffic", "releases"]
+SUPPORTED_CMDS = ["traffic", "releases", "search"]
 
 if __name__ == "__main__":
     # logging.basicConfig(level=logging.DEBUG)
@@ -83,6 +99,17 @@ if __name__ == "__main__":
     if cmd == "releases":
         repo = options[0]
         result = releases(repo)
+    
+    if cmd == "search":
+        search_type = options[0]
+        search_query = options[1]
+        result = search(search_type, search_query)
 
     for r in result:
-        print(json.dumps(r))
+        try:
+            print(json.dumps(r))
+        except BrokenPipeError:
+            # We both catch the error *and* close stderr (stdout is already closed)
+            # Reference: https://stackoverflow.com/a/26738736
+            sys.stderr.close()
+            exit(0)

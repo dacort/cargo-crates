@@ -1,6 +1,5 @@
 import json
 import sys
-from typing import Optional
 import requests
 
 ENV_VARS = []
@@ -20,16 +19,30 @@ def dad_joke():
     # We manually parse the utf-8 decoded content because it's includes unicode control characters
     return [json.loads(r.content.decode('utf-8'))]
 
+def search(query: str=None):
+    params = {}
+    if query:
+        params = {"term": query}
+    r = get(endpoint("search"), params)
+
+    return json.loads(r.content.decode('utf-8'))['results']
+
+SUPPORTED_CMDS = ['search']
 
 if __name__ == "__main__":
     # By default, we print a single dad joke
-    result = dad_joke()
-    # # Ensure a valid command is provided
-    # cmd = sys.argv[1]
-    # options = sys.argv[2:]
-    # if cmd not in SUPPORTED_CMDS:
-    #     print(f"ERR: '{cmd}' is not a supported commmand.")
-    #     exit(1)
+    if len(sys.argv) == 1:
+        result = dad_joke()
+    else:
+        cmd = sys.argv[1]
+        if cmd not in SUPPORTED_CMDS:
+            print(f"ERR: '{cmd}' is not a supported commmand.")
+            exit(1)
+        options = None
+        if len(sys.argv) > 2:
+            options = sys.argv[2:]
+        # search is only supported command today
+        result = search(options)
 
     for r in result:
         try:

@@ -1,6 +1,7 @@
 ALL = [
     "fatherhood",
     "github",
+    "icanhazdadjoke",
     "oura",
     "reddit",
     "slack",

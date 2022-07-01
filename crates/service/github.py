@@ -34,14 +34,25 @@ def search(type, query):
 
     return response.json().get('items')
 
-def releases(repo):
+def releases(repos):
     """
     Retrieves release data for a specific {owner}/{repo}
     """
-    url = f"repos/{repo}/releases"
-    response = get(endpoint(url))
 
-    return response.json()
+    results = []
+    for repo in repos:
+        url = f"repos/{repo}/releases"
+        response = get(endpoint(url))
+        for release in response.json():
+            results.append({
+                    "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+                    "utcisonow": datetime.utcnow().isoformat(),
+                    "repo": repo,
+                    "release_info": release
+                })
+
+    # print(results)
+    return results
 
 
 def traffic(repos, traffic_path=None):
@@ -97,8 +108,8 @@ if __name__ == "__main__":
         result = traffic(repo, path)
     
     if cmd == "releases":
-        repo = options[0]
-        result = releases(repo)
+        repos = options[0].split(",")
+        result = releases(repos)
     
     if cmd == "search":
         search_type = options[0]

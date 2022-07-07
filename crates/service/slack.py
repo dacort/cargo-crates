@@ -4,19 +4,23 @@ import sys
 
 import requests
 
-ENV_VARS = ["SLACK_TOKEN"]
+ENV_VARS = ["SLACK_TOKEN", "SLACK_COOKIE_TOKEN"]
 API_BASE = "slack.com/api"
-
 
 def endpoint(path):
     return f"https://{API_BASE}/{path}"
 
 
 def get(url, params={}):
+    cookies = {}
+    if os.getenv('SLACK_TOKEN').startswith("xoxc"):
+        cookies['d'] = os.getenv('SLACK_COOKIE_TOKEN')
+
     return requests.get(
         url,
         params=params,
         headers={"Authorization": f"Bearer {os.getenv('SLACK_TOKEN')}"},
+        cookies=cookies
     )
 
 

@@ -3,6 +3,7 @@ import sys
 
 import requests
 
+ENV_VARS = []
 API_BASE = "api.stackexchange.com/2.3"
 SUPPORTED_CMDS = ["search", "channels"]
 

@@ -56,6 +56,14 @@ Right now I'm building this for my own purposes. So the set of supported APIs or
 
 ## Supported Services
 
+- [GitHub](#github) - Get traffic stats and release information, including downloads
+- [YouTube](#youtube) - Get stats for specific video IDs and channel IDs
+- [Oura](#oura) - Get your sleep, activity, and readiness stats
+- [Reddit](#reddit-api) - Get your saved posts and search all of Reddit or a subreddit
+- [Slack](#slack-web-api) - List channels in a Slack team and search for a keyword
+- [Stack Overflow](#stack-overflow) - Search for questions on Stack Overflow
+- [Twitter](#twitter) - List the last 10,000 followers for a screen name and show a user's profile
+
 ### GitHub
 
 Supported Commands:
@@ -472,6 +480,34 @@ docker run -e SLACK_TOKEN \
 ```shell
 docker run -e SLACK_TOKEN \
     ghcr.io/dacort/crates-slack search dacort
+```
+
+### Stack Overflow
+
+The [Stack Exchange API](https://api.stackexchange.com/docs) can be used to query sites across Stack Exchange. I'm using it to query for specific tags to keep up-to-date with conversations.
+
+Supported Commands:
+- `search` - [search for questions with one or more tags](https://api.stackexchange.com/docs/questions) on Stack Overflow
+
+Environment Variables:
+- n/a - The API doesn't require authentication, but you may get limited by your IP address
+
+Examples:
+
+1. Get a list of questions tagged `amazon-emr`
+
+```shell
+docker run \
+    ghcr.io/dacort/crates-stackoverflow search amazon-emr
+```
+
+> Note: Tags are an *AND* constraint, so if you search for multiple it will only return posts that contain up to 5 tags.
+
+2. Perform a search for questions tagged `amazon-emr` *and* `emr-serverless`
+
+```shell
+docker run \
+    ghcr.io/dacort/crates-stackoverflow search "amazon-emr;emr-serverless"
 ```
 
 ### Twitter

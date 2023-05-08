@@ -6,7 +6,7 @@ import sys
 
 import requests
 
-ENV_VARS = ["SLACK_TOKEN", "SLACK_COOKIE_TOKEN"]
+ENV_VARS = ["SLACK_TOKEN", "SLACK_COOKIE_TOKEN", "SLACK_DS_COOKIE"]
 API_BASE = "slack.com/api"
 
 
@@ -18,6 +18,9 @@ def get(url, params={}):
     cookies = {}
     if os.getenv("SLACK_TOKEN").startswith("xoxc"):
         cookies["d"] = os.getenv("SLACK_COOKIE_TOKEN")
+
+    if os.getenv("SLACK_DS_COOKIE"):
+        cookies["d-s"] = os.getenv("SLACK_DS_COOKIE")
 
     return requests.get(
         url,

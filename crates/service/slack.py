@@ -49,12 +49,14 @@ def search(query):
     return r.json().get("messages").get("matches", [])
 
 
-def channels():
+def channels(include_private=False):
     """
     Returns the channel listing for the org associated with the provided token.
     Documentation: https://api.slack.com/methods/conversations.list
     """
     params = {"exclude_archived": "true"}
+    if include_private:
+        params['types'] = "public_channel,private_channel"
 
     while True:
         r = get(endpoint("conversations.list"), params)
@@ -75,7 +77,7 @@ def history(channel_name, days=7, include_threads=True):
     Optionally includes thread messages by default.
     """
     chan_id = None
-    for chan in channels():
+    for chan in channels(include_private=True):
         if chan["name"].lower() == channel_name.lower():
             chan_id = chan["id"]
             break

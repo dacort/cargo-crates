@@ -56,10 +56,15 @@ def channels(include_private=False):
     """
     params = {"exclude_archived": "true"}
     if include_private:
-        params['types'] = "public_channel,private_channel"
+        # This /kind of/ works if I set params['team_id'] - could be hitting rate limits?
+        params["types"] = "public_channel,private_channel"
+
+    params["team_id"] = team_id
 
     while True:
         r = get(endpoint("conversations.list"), params)
+        if r.status_code != 200:
+            raise RuntimeError(f"Error from API({r.status_code}): {r.json()}")
         data = r.json()
         for chan in data.get("channels", []):
             yield chan
@@ -76,11 +81,16 @@ def history(channel_name, days=7, include_threads=True):
     Returns a list of messages for a specific channel in the given timeframe (now-timeframe).
     Optionally includes thread messages by default.
     """
-    chan_id = None
-    for chan in channels(include_private=True):
-        if chan["name"].lower() == channel_name.lower():
-            chan_id = chan["id"]
-            break
+    # If the passed channel name is CID-XXX, the user provided us with a channel ID.
+    # Use that instead of trying to find the channel using channels.list
+    chan_id: str | None = None
+    if channel_name.startswith("CID-"):
+        chan_id = channel_name.split("-")[1]
+    else:
+        for chan in channels(include_private=True):
+            if chan["name"].lower() == channel_name.lower():
+                chan_id = chan["id"]
+                break
 
     if not chan_id:
         raise RuntimeError(f"Could not find channel '{channel_name}'")
@@ -120,7 +130,10 @@ if __name__ == "__main__":
         result = search(query)
 
     if cmd == "channels":
-        result = channels()
+        show_private = False
+        if len(sys.argv) > 2:
+            show_private = True
+        result = channels(show_private)
 
     if cmd == "history":
         channel_name = sys.argv[2]

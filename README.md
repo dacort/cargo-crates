@@ -2,7 +2,7 @@
 
 An easy way to build data extractors in Docker.
 
-Get it ... it's data containers ... cargo crates. 
+Get it ... it's data containers ... cargo crates.
 
 Anyway.
 
@@ -46,7 +46,7 @@ docker run --env-file .env ghcr.io/dacort/crates-twitter users/show dacort
 docker run --env-file .env ghcr.io/dacort/crates-twitter followers dacort
 ```
 
-The idea is that the Docker container provides an abstraction on top of the underlying APIs and can be implemented however you want. 
+The idea is that the Docker container provides an abstraction on top of the underlying APIs and can be implemented however you want.
 
 Perhaps someday down the road there could be a set of base images that provide a nice set of abstractions for generic authentication and error handling. But for now, it's just a bunch of python.
 
@@ -67,49 +67,65 @@ Right now I'm building this for my own purposes. So the set of supported APIs or
 ### GitHub
 
 Supported Commands:
+
 - `traffic` - returns results from GitHub traffic stats including clones, popular/paths, popular/referrers, and views. Each type of traffic stat is a subcommand.
 - `releases` - returns information about releases for a specific GitHub repo.
 
 Environment Variables:
+
 - `GITHUB_PAT` - Your GitHub [Personal Access Token](https://github.com/settings/tokens)
 
 Examples:
+
 - Return all traffic stats for `dacort/cargo-crates`
-    ```shell
-    docker run -e GITHUB_PAT \
-        ghcr.io/dacort/crates-github \
-        traffic dacort/cargo-crates 
-    ```
-    ```json
-    {"repo": "dacort/cargo-crates", "path": "clones", "stats": {"count": 77, "uniques": 8, "clones": [{"timestamp": "2021-03-18T00:00:00Z", "count": 77, "uniques": 8}]}}
-    {"repo": "dacort/cargo-crates", "path": "popular/paths", "stats": [{"path": "/dacort/cargo-crates/actions", "title": "Actions \u00b7 dacort/cargo-crates", "count": 33, "uniques": 1}, {"path": "/dacort/cargo-crates", "title": "dacort/cargo-crates", "count": 11, "uniques": 2}, {"path": "/dacort/cargo-crates/actions/workflows/crates.yaml", "title": "Actions \u00b7 dacort/cargo-crates", "count": 7, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666130915", "title": "Remove useless job0 \u00b7 dacort/cargo-crates@6b54337", "count": 4, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666151009", "title": "Trying something else \u00b7 dacort/cargo-crates@ed3d226", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666165537", "title": "Hmm \u00b7 dacort/cargo-crates@64c59e7", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666215936", "title": "Add requirements \u00b7 dacort/cargo-crates@6161093", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666227882", "title": "Does this actually work now?? \u00b7 dacort/cargo-crates@37d31ea", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/pulls", "title": "Pull requests \u00b7 dacort/cargo-crates", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/workflows/test_matrix.yaml", "title": "Actions \u00b7 dacort/cargo-crates", "count": 2, "uniques": 1}]}
-    {"repo": "dacort/cargo-crates", "path": "popular/referrers", "stats": [{"referrer": "github.com", "count": 3, "uniques": 2}]}
-    {"repo": "dacort/cargo-crates", "path": "views", "stats": {"count": 108, "uniques": 2, "views": [{"timestamp": "2021-03-18T00:00:00Z", "count": 108, "uniques": 2}]}}
-    ```
+  ```shell
+  docker run -e GITHUB_PAT \
+      ghcr.io/dacort/crates-github \
+      traffic dacort/cargo-crates
+  ```
+  ```json
+  {"repo": "dacort/cargo-crates", "path": "clones", "stats": {"count": 77, "uniques": 8, "clones": [{"timestamp": "2021-03-18T00:00:00Z", "count": 77, "uniques": 8}]}}
+  {"repo": "dacort/cargo-crates", "path": "popular/paths", "stats": [{"path": "/dacort/cargo-crates/actions", "title": "Actions \u00b7 dacort/cargo-crates", "count": 33, "uniques": 1}, {"path": "/dacort/cargo-crates", "title": "dacort/cargo-crates", "count": 11, "uniques": 2}, {"path": "/dacort/cargo-crates/actions/workflows/crates.yaml", "title": "Actions \u00b7 dacort/cargo-crates", "count": 7, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666130915", "title": "Remove useless job0 \u00b7 dacort/cargo-crates@6b54337", "count": 4, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666151009", "title": "Trying something else \u00b7 dacort/cargo-crates@ed3d226", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666165537", "title": "Hmm \u00b7 dacort/cargo-crates@64c59e7", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666215936", "title": "Add requirements \u00b7 dacort/cargo-crates@6161093", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/runs/666227882", "title": "Does this actually work now?? \u00b7 dacort/cargo-crates@37d31ea", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/pulls", "title": "Pull requests \u00b7 dacort/cargo-crates", "count": 3, "uniques": 1}, {"path": "/dacort/cargo-crates/actions/workflows/test_matrix.yaml", "title": "Actions \u00b7 dacort/cargo-crates", "count": 2, "uniques": 1}]}
+  {"repo": "dacort/cargo-crates", "path": "popular/referrers", "stats": [{"referrer": "github.com", "count": 3, "uniques": 2}]}
+  {"repo": "dacort/cargo-crates", "path": "views", "stats": {"count": 108, "uniques": 2, "views": [{"timestamp": "2021-03-18T00:00:00Z", "count": 108, "uniques": 2}]}}
+  ```
 - Return only views for `dacort/cargo-crates`
-    ```shell
-    docker run -e GITHUB_PAT ghcr.io/dacort/crates-github traffic dacort/cargo-crates views
-    ```
-    ```json
-    {"repo": "dacort/cargo-crates", "path": "views", "stats": {"count": 108, "uniques": 2, "views": [{"timestamp": "2021-03-18T00:00:00Z", "count": 108, "uniques": 2}]}}
-    ```
+  ```shell
+  docker run -e GITHUB_PAT ghcr.io/dacort/crates-github traffic dacort/cargo-crates views
+  ```
+  ```json
+  {
+    "repo": "dacort/cargo-crates",
+    "path": "views",
+    "stats": {
+      "count": 108,
+      "uniques": 2,
+      "views": [
+        { "timestamp": "2021-03-18T00:00:00Z", "count": 108, "uniques": 2 }
+      ]
+    }
+  }
+  ```
 
 ### YouTube
 
 Supported Commands:
+
 - `videos` - return video stats for up to 50 video IDs.
 - `channel_videos` - return video stats for 50 videos on the provided channel ID.
 
 Environment Variables:
+
 - `YOUTUBE_API_KEY` - An API key for the [YouTube Data API](https://developers.google.com/youtube/v3/docs)
 
 Examples:
+
 - Return video stats for [Intro to EMR Studio](https://www.youtube.com/watch?v=rZ3zeJ6WKPY)
-    ```shell
-    docker run -e YOUTUBE_API_KEY \
-        ghcr.io/dacort/crates-youtube \
-        videos rZ3zeJ6WKPY 
-    ```
+  ```shell
+  docker run -e YOUTUBE_API_KEY \
+      ghcr.io/dacort/crates-youtube \
+      videos rZ3zeJ6WKPY
+  ```
     <details>
         <summary>Click to view JSON</summary>
     ```json
@@ -194,20 +210,23 @@ Examples:
 Retrieve one of three different [daily summaries](https://cloud.ouraring.com/docs/daily-summaries) from the Oura Ring API.
 
 Supported Commands:
+
 - `sleep` - return [sleep periods](https://cloud.ouraring.com/docs/sleep)
 - `activity` - return [activity summary](https://cloud.ouraring.com/docs/activity)
 - `readiness` - return [readiness data](https://cloud.ouraring.com/docs/readiness)
 
 Environment Variables:
+
 - `OURA_PAT` - Your Oura [personal access token](https://cloud.ouraring.com/personal-access-tokens#)
 
 Examples:
+
 - Return sleep data for the past 7 days
-    ```shell
-    docker run -e OURA_PAT \
-        ghcr.io/dacort/crates-oura \
-        sleep | head -n 1
-    ```
+  ```shell
+  docker run -e OURA_PAT \
+      ghcr.io/dacort/crates-oura \
+      sleep | head -n 1
+  ```
     <details>
         <summary>Click to view JSON</summary>
     ```json
@@ -445,11 +464,13 @@ I wanted to get my saved posts out of the [Reddit API](https://www.reddit.com/de
 This functionality just fetches the most recent 100 saved posts every time. I considered adding a `start_date` filter, but don't need it right now. 😁
 
 Supported Commands:
+
 - saved <username> - list saved posts for `<username>`
 - search [subreddit] <search_term> - search all of Reddit or a specific subreddit (`r/subreddit_name`) for a search term
-    - Note that terms in quotes need to be surrounded in single quotes, e.g. `'"cargo crates"'`
+  - Note that terms in quotes need to be surrounded in single quotes, e.g. `'"cargo crates"'`
 
 Environment Variables:
+
 - CLIENT_ID - Client ID of a ["script"](https://www.reddit.com/prefs/apps) type app
 - CLIENT_SECRET - App secret
 - USERNAME - Your Reddit username
@@ -460,25 +481,37 @@ Environment Variables:
 The [Slack Web API](https://api.slack.com/web) is intended for use with ad-hoc queries and I use it to query basic info about some of the channels I'm in.
 
 Supported Commands:
+
 - `channels` - [list all channels](https://api.slack.com/methods/conversations.list) in a Slack team
 - `search` - [search for a keyword](https://api.slack.com/methods/search.messages) in your Slack team
 
 Environment Variables:
+
 - `SLACK_TOKEN` - Some sort of Slack token that starts with `xox...`
+
+If using a browser-based token (starts with xoxc) you need the `d` and (sometimes) `d-s` cookies from dev tools
+
+```javascript
+var localConfig = JSON.parse(localStorage.localConfig_v2)
+localConfig.teams[localConfig.lastActiveTeamId].token
+```
+
+- `SLACK_COOKIE_TOKEN` - `d` cookie
+- `SLACK_DS_COOKIE` - `d-s` cookie
 
 Examples:
 
 1. Get a list of channels for the workspace the token is associated with
 
 ```shell
-docker run -e SLACK_TOKEN \
+docker run -e SLACK_TOKEN -e SLACK_COOKIE_TOKEN \
     ghcr.io/dacort/crates-slack channels
 ```
 
 2. Perform a search in the workspace the token is associated with
 
 ```shell
-docker run -e SLACK_TOKEN \
+docker run -e SLACK_TOKEN -e SLACK_COOKIE_TOKEN \
     ghcr.io/dacort/crates-slack search dacort
 ```
 
@@ -487,9 +520,11 @@ docker run -e SLACK_TOKEN \
 The [Stack Exchange API](https://api.stackexchange.com/docs) can be used to query sites across Stack Exchange. I'm using it to query for specific tags to keep up-to-date with conversations.
 
 Supported Commands:
+
 - `search` - [search for questions with one or more tags](https://api.stackexchange.com/docs/questions) on Stack Overflow
 
 Environment Variables:
+
 - n/a - The API doesn't require authentication, but you may get limited by your IP address
 
 Examples:
@@ -501,9 +536,9 @@ docker run \
     ghcr.io/dacort/crates-stackoverflow search amazon-emr
 ```
 
-> Note: Tags are an *AND* constraint, so if you search for multiple it will only return posts that contain up to 5 tags.
+> Note: Tags are an _AND_ constraint, so if you search for multiple it will only return posts that contain up to 5 tags.
 
-2. Perform a search for questions tagged `amazon-emr` *and* `emr-serverless`
+2. Perform a search for questions tagged `amazon-emr` _and_ `emr-serverless`
 
 ```shell
 docker run \
@@ -515,10 +550,12 @@ docker run \
 Only a couple Twitter endpoints are defined at this point.
 
 Supported Commands:
+
 - `followers` - return list of followers for a given screen name
 - `users/show` - return user profile data for a given screen name
 
 Environment Variables - create a Twitter app and define the 4 different variables.
+
 - `CONSUMER_KEY`
 - `CONSUMER_SECRET`
 - `ACCESS_TOKEN_KEY`
@@ -527,19 +564,20 @@ Environment Variables - create a Twitter app and define the 4 different variable
 You can store all these environment variables in a file and reference that file with Docker.
 
 Examples:
+
 - Return [@dacort's](https://twitter.com/dacort) profile
-    ```shell
-    docker run --env-file .env \
-        ghcr.io/dacort/crates-twitter \
-        users/show dacort
-    ```
-    ```json
-    {"id": "99723", "name": "Damon Cortesi", "username": "dacort"}
-    ```
+  ```shell
+  docker run --env-file .env \
+      ghcr.io/dacort/crates-twitter \
+      users/show dacort
+  ```
+  ```json
+  { "id": "99723", "name": "Damon Cortesi", "username": "dacort" }
+  ```
 
 ## Writing output to Amazon S3
 
-The original idea behind this repo was that I could run these containers and easily output the resulting data to templated paths on S3. 
+The original idea behind this repo was that I could run these containers and easily output the resulting data to templated paths on S3.
 
 So I built another tool, called [Forklift](https://github.com/dacort/forklift), that comes bundled with each Cargo Crate.
 
@@ -556,24 +594,24 @@ docker run \
     --env-file .env \
     ghcr.io/dacort/crates-twitter users/show dacort
 ```
- 
-Note that we passed AWS credentials as environment variables. You will either need to do that or run the container in AWS using [instance profiles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html). 
+
+Note that we passed AWS credentials as environment variables. You will either need to do that or run the container in AWS using [instance profiles](https://docs.aws.amazon.com/IAM/latest/UserGuide/id_roles_use_switch-role-ec2.html).
 
 ## Some higher level thoughts after a few implementations
 
 - The data is intended to be streamed
-    - Output is always a JSON stream
+  - Output is always a JSON stream
 - Each implementation is intended to be completely independent
-    - They're all Python...they could be anything else!
+  - They're all Python...they could be anything else!
 - Each implementation is intended to be as lightweight as possible
-    - Don't force unnecessary requirements into a crate
+  - Don't force unnecessary requirements into a crate
 
 ## Next steps
 
 - Formalize the executor API and base class
-    - I want a way to be able to register commands, their parameters, and required environment variables
+  - I want a way to be able to register commands, their parameters, and required environment variables
 - Formalize the output API and stdout/S3 classes
-    - Right now it's pretty hardcoded into the GitHub crate
+  - Right now it's pretty hardcoded into the GitHub crate
 
 ## Maybe someday
 

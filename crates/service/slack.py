@@ -22,12 +22,45 @@ def get(url, params={}):
     if os.getenv("SLACK_DS_COOKIE"):
         cookies["d-s"] = os.getenv("SLACK_DS_COOKIE")
 
-    return requests.get(
+    response = requests.get(
         url,
         params=params,
         headers={"Authorization": f"Bearer {os.getenv('SLACK_TOKEN')}"},
         cookies=cookies,
     )
+
+    if response.status_code != 200 or response.json().get("ok") is False:
+        raise RuntimeError(f"Error from API({response.status_code}): {response.json()}")
+
+    return response
+
+
+def __lookup_channel_id(channel_name_or_id: str) -> str:
+    """Looks up the channel ID based on the name.
+
+    If the passed channel_name_or_id starts with CID, the user already provided the exact channel ID.
+
+    Args:
+        channel_name_or_id (str): The channel name or an ID that starts with CID
+
+    Returns:
+        str: The channel ID
+    """
+    # If the passed channel name is CID-XXX, the user provided us with a channel ID.
+    # Use that instead of trying to find the channel using channels.list
+    chan_id: str | None = None
+    if channel_name_or_id.startswith("CID-"):
+        chan_id = channel_name_or_id.split("-")[1]
+    else:
+        for chan in channels(include_private=True):
+            if chan["name"].lower() == channel_name_or_id.lower():
+                chan_id = chan["id"]
+                break
+
+    if not chan_id:
+        raise RuntimeError(f"Could not find channel '{channel_name_or_id}'")
+
+    return chan_id
 
 
 def team_info():
@@ -47,6 +80,41 @@ def search(query):
 
     r = get(endpoint("search.messages"), params)
     return r.json().get("messages").get("matches", [])
+
+
+def channel_members(channel_name: str):
+    """Looks up the members that belong to the given channel.
+
+    Args:
+        channel_name (str): The name of the channel
+    """
+    chan_id = __lookup_channel_id(channel_name)
+
+    params = {"channel": chan_id}
+    while True:
+        r = get(endpoint("conversations.members"), params)
+        data = r.json()
+        for userid in data.get("members", []):
+            yield __user_lookup(userid)
+        # Next cursor is by default an empty string, but in case it's not use that as the default.
+        cursor = data.get("response_metadata", {}).get("next_cursor")
+        if cursor:
+            params["cursor"] = cursor
+        else:
+            break
+
+
+def __user_lookup(user_id: str):
+    """Look up user info
+
+    Args:
+        user_id (str): The user's slack ID
+    """
+    params = {"user": user_id}
+    r = get(endpoint("users.info"), params)
+    if r.status_code != 200:
+        raise RuntimeError(f"Error from API({r.status_code}): {r.json()}")
+    return r.json().get('user')
 
 
 def channels(include_private=False):
@@ -81,19 +149,7 @@ def history(channel_name, days=7, include_threads=True):
     Returns a list of messages for a specific channel in the given timeframe (now-timeframe).
     Optionally includes thread messages by default.
     """
-    # If the passed channel name is CID-XXX, the user provided us with a channel ID.
-    # Use that instead of trying to find the channel using channels.list
-    chan_id: str | None = None
-    if channel_name.startswith("CID-"):
-        chan_id = channel_name.split("-")[1]
-    else:
-        for chan in channels(include_private=True):
-            if chan["name"].lower() == channel_name.lower():
-                chan_id = chan["id"]
-                break
-
-    if not chan_id:
-        raise RuntimeError(f"Could not find channel '{channel_name}'")
+    chan_id = __lookup_channel_id(channel_name)
 
     oldest = dt.datetime.utcnow() - dt.timedelta(days=days)
     params = {"channel": chan_id, "oldest": time.mktime(oldest.timetuple())}
@@ -110,7 +166,7 @@ def history(channel_name, days=7, include_threads=True):
             break
 
 
-SUPPORTED_CMDS = ["search", "channels", "history"]
+SUPPORTED_CMDS = ["search", "channels", "history", "channel_members"]
 
 if __name__ == "__main__":
     cmd = "search"
@@ -141,6 +197,10 @@ if __name__ == "__main__":
         if len(sys.argv) > 3:
             timeframe = int(sys.argv[3])
         result = history(channel_name, timeframe)
+    
+    if cmd == "channel_members":
+        channel_name = sys.argv[2]
+        result = channel_members(channel_name)
 
     for r in result:
         r["team_name"] = team_name

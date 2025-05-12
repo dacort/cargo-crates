@@ -24,7 +24,10 @@ def client_v2():
 
 
 def user_info_by_username(username):
-    r = client_v2().request(f"users/by/username/:{username}")
+    params = {
+        "user.fields": "created_at,description,public_metrics"
+    }
+    r = client_v2().request(f"users/by/username/:{username}", params)
     return r.json().get("data")
 
 
@@ -46,8 +49,13 @@ def followers_by_userid(userid):
 
     return followers
 
+def tweets_by_ids(tweet_ids):
+    params = {
+        "tweet.fields": "attachments,conversation_id,created_at,entities,geo"
+    }
 
-SUPPORTED_CMDS = ["followers", "users/show"]
+
+SUPPORTED_CMDS = ["followers", "users/show", "tweets"]
 
 if __name__ == "__main__":
     cmd = sys.argv[1]
@@ -67,3 +75,6 @@ if __name__ == "__main__":
         followers = followers_by_userid(user_info.get("id"))
         for follower in followers:
             print(json.dumps(follower))
+    
+    if cmd == "tweets":
+        tweet_ids = options[0].split(",")

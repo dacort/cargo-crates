@@ -28,7 +28,8 @@ def search(type, query):
     params = {
         "q": query,
         "sort": "created",
-        "order": "desc"
+        "order": "desc",
+        "per_page": 100,
     }
     response = get(endpoint(url), params, {"Accept": "application/vnd.github.v3.text-match+json"})
 

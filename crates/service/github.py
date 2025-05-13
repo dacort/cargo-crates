@@ -1,6 +1,6 @@
+import json
 import os
 import sys
-import json
 from datetime import datetime
 
 import requests
@@ -15,9 +15,8 @@ def endpoint(path):
 
 def get(url, params={}, headers={}):
     headers.update({"Authorization": f"Bearer {os.getenv('GITHUB_PAT')}"})
-    return requests.get(
-        url, params=params, headers=headers
-    )
+    return requests.get(url, params=params, headers=headers)
+
 
 def search(type, query):
     """
@@ -28,11 +27,15 @@ def search(type, query):
     params = {
         "q": query,
         "sort": "created",
-        "order": "desc"
+        "order": "desc",
+        "per_page": 100,
     }
-    response = get(endpoint(url), params, {"Accept": "application/vnd.github.v3.text-match+json"})
+    response = get(
+        endpoint(url), params, {"Accept": "application/vnd.github.v3.text-match+json"}
+    )
 
-    return response.json().get('items')
+    return response.json().get("items")
+
 
 def releases(repos):
     """
@@ -44,12 +47,14 @@ def releases(repos):
         url = f"repos/{repo}/releases"
         response = get(endpoint(url))
         for release in response.json():
-            results.append({
+            results.append(
+                {
                     "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
                     "utcisonow": datetime.utcnow().isoformat(),
                     "repo": repo,
-                    "release_info": release
-                })
+                    "release_info": release,
+                }
+            )
 
     # print(results)
     return results
@@ -77,13 +82,15 @@ def traffic(repos, traffic_path=None):
             url = f"repos/{repo}/traffic/{path}"
             response = get(endpoint(url))
             # results[path] = response.json()
-            results.append({
-                "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
-                "utcisonow": datetime.utcnow().isoformat(),
-                "repo": repo,
-                "path": path,
-                "stats": response.json()
-            })
+            results.append(
+                {
+                    "timestamp": datetime.utcnow().strftime("%Y-%m-%d %H:%M:%S"),
+                    "utcisonow": datetime.utcnow().isoformat(),
+                    "repo": repo,
+                    "path": path,
+                    "stats": response.json(),
+                }
+            )
 
     return results
 
@@ -106,11 +113,11 @@ if __name__ == "__main__":
         if len(options) > 1:
             path = options[1].split(",")
         result = traffic(repo, path)
-    
+
     if cmd == "releases":
         repos = options[0].split(",")
         result = releases(repos)
-    
+
     if cmd == "search":
         search_type = options[0]
         search_query = options[1]
